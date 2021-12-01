@@ -21,24 +21,29 @@ All CSV inputs are first preprocessed using ```preproc.preprocess_settings(sessi
 
 Here's an example of the Session parent directory:
 ```
-(base) ➜  RCS07L_pre-stim git:(master) ✗ pwd
-/Users/mariaolaru/Documents/RCS07/RCS07L/RCS07L_pre-stim
-(base) ➜  RCS07L_pre-stim git:(master) ✗ ls
+(base) ➜  RCS07L_montage git:(master) ✗ pwd
+/Users/mariaolaru/Documents/RCS07/RCS07L/RCS07L_montage
+(base) ➜  RCS07L_montage git:(master) ✗ ls
 Session1570875824700
 Session1570924382813
 Session1570925029056
 Session1570937044332
-Session1570955823964
 ```
 Now, in the Python console, input the parent directory of the Sessions folders:
 ```
 import preproc.preprocess_funcs as preproc
-session_parent_dir = '/Users/mariaolaru/Documents/RCS07/RCS07L/RCS07L_pre-stim/'
+session_parent_dir = '/Users/mariaolaru/Documents/RCS07/RCS07L/RCS07L_montage/'
 [df_settings, df_notes, gp] = preproc.preprocess_settings(session_parent_dir)
 df_ts = preproc.preprocess_data(session_parent_dir, msc, gp) 
 ```
-### Montage plots
-Montages refer to automated recordings which alternate sensing electrodes & sampling rates to better spatially localize the neural signal. Typically, montage recordings are collected in all four combinations of medication state (ON/OFF) and stimulation state (ON/OFF). 
+### Montage spectral analysis
+Montages refer to automated recordings which alternate between 11 sensing electrode pairs & 2 sampling rates (500Hz, 1000Hz) to better spatially localize the neural signal. Typically, montage recordings are collected in all four combinations of medication state (ON/OFF) and stimulation state (ON/OFF). Montages are plotted as power spectra using plot.plot_montage(session_parent_dir, labels):
+```
+import plts.plot_funcs as plot
+labels = ["medOFF_stimON", "medON_stimON", "medOFF_stimOFF", "medON_stimOFF"]
+plt.plot_montage(session_parent_dir, labels)
+```
+Note: ```labels``` is a vector listing the various conditions of each Session directory in chronological order. <br/>
 
 
 
