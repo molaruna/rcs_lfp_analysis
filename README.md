@@ -38,6 +38,8 @@ session_parent_dir = '/Users/mariaolaru/Documents/RCS07/RCS07L/RCS07L_pre-stim/'
 df_ts = preproc.preprocess_data(session_parent_dir, msc, gp) 
 ```
 ### Montage plots
+Montages refer to automated recordings which alternate sensing electrodes & sampling rates to better spatially localize the neural signal. Typically, montage recordings are collected in all four combinations of medication state (ON/OFF) and stimulation state (ON/OFF). 
+
 
 
 
