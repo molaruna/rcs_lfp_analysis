@@ -42,7 +42,7 @@ Montages refer to automated recordings which alternate between 11 sensing electr
 labels = ["medOFF_stimON", "medON_stimON", "medOFF_stimOFF", "medON_stimOFF"]
 plts/plot_montage(session_parent_dir, labels)
 ```
-Note: ```labels``` is a vector listing the various conditions of each Session directory in chronological order. <br/>
+Note: ```labels``` is a vector that lists the various conditions of each Session directory in *chronological* order. <br/>
 <br/>
 All outputs will be generated in a `plots` directory of the input directory
 
