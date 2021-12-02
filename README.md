@@ -39,11 +39,13 @@ df_ts = preproc.preprocess_data(session_parent_dir, msc, gp)
 ### Montage spectral analysis
 Montages refer to automated recordings which alternate between 11 sensing electrode pairs & 2 sampling rates (500Hz, 1000Hz) to better spatially localize the neural signal. Typically, montage recordings are collected in all four combinations of medication state (ON/OFF) and stimulation state (ON/OFF). Montages are plotted as power spectra using plot.plot_montage(session_parent_dir, labels):
 ```
-import plts.plot_funcs as plot
 labels = ["medOFF_stimON", "medON_stimON", "medOFF_stimOFF", "medON_stimOFF"]
-plt.plot_montage(session_parent_dir, labels)
+plts/plot_montage(session_parent_dir, labels)
 ```
 Note: ```labels``` is a vector listing the various conditions of each Session directory in chronological order. <br/>
+<br/>
+All outputs will be generated in a `plots` directory of the input directory
+
 
 
 
