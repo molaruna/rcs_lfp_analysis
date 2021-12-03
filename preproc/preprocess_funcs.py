@@ -15,7 +15,12 @@ import os
 import re
 
 def get_filepaths(dir_name):
+    nchars = len(dir_name)
+    if (dir_name[nchars-1] != '/'):
+        dir_name = dir_name + '/'
+        
     filepaths = glob.glob(dir_name + "Session*/" + "Device*")
+
     return filepaths
 
 
