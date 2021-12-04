@@ -7,7 +7,7 @@ This code uses CSV file inputs from [processrcs_wrapper()](https://github.com/mo
 This code uses Python 3.8.3
 
 ## Data
-Data are collected from the Summit RC+S neurostimulator (Medtronic) and available on [UCSF Box](https://ucsf.app.box.com/folder/0) and [Dropbox](https://www.dropbox.com/work) as Session directories, you can request access from me. Then, the data is preprocessed and formatted into CSV files for python compatibility using [processrcs_wrapper()](https://github.com/molaruna/processrcs_wrapper). Specifically, CSV files required in each Session directory are listed below:<br/>
+Data are collected from the Summit RC+S neurostimulator (Medtronic) and available on [UCSF Box](https://ucsf.app.box.com/folder/0) and [Dropbox](https://www.dropbox.com/work) as Session directories. You can request access for these data from me. Then, the data are preprocessed and formatted into CSV files for python compatibility using [processrcs_wrapper()](https://github.com/molaruna/processrcs_wrapper). Specifically, these are CSV files that are required in each Session directory:<br/>
 * eventLogTable.csv
 * metaData.csv (header info: subj_ID, implant_side)
 * timeDomainData.csv 
@@ -47,7 +47,8 @@ Note: ```labels``` is a vector that lists the various conditions of each Session
 <br/>
 All outputs will be generated in a `plots` directory of the input directory
 
-
+## License
+This software is open source and under an MIT license.
 
 
 
