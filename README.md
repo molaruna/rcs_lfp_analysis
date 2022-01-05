@@ -29,7 +29,7 @@ Session1570924382813
 Session1570925029056
 Session1570937044332
 ```
-Now, in the Python console, run preproc.preproces_settings():
+Now, in the Python console, run preproc.preprocess_settings():
 ```
 import preproc.preprocess_funcs as preproc
 session_parent_dir = '/Users/mariaolaru/Documents/RCS07/RCS07L/RCS07L_montage/'
