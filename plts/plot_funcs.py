@@ -233,6 +233,25 @@ def plot_PSD_montage_conditions(psds, msc, sr, gp):
     fig.savefig(out_plot_fp + "_conditions_" + str(sr) + ".svg")
     fig.savefig(out_plot_fp + "_conditions_" + str(sr) + ".pdf")
 
+def plot_long_psd(contacts, df_in, alpha, gp):
+    for i in range(len(contacts)):
+        plt.close()
+        contact = contacts[i]
+        
+        df_psd_c1 = df_in[df_in['contacts'] == contact]
+        df_psd_c1['f_0'] = df_psd_c1['f_0'].astype('float')
+        df_psd_c1p = pd.pivot_table(df_psd_c1, values = 'spectra', index = 'timestamp', columns = 'f_0')
+        
+        df = df_psd_c1p
+        for i in range(len(df)):
+            freqs = np.linspace(0, 125, 126)
+            spectra = df.iloc[i, 0:126]
+            plt.plot(freqs, np.log10(spectra), alpha = alpha, color = 'blue')
+            plt.ylabel('log10(Power)')
+            plt.xlabel('Frequency(Hz)')
+            plt.title(contact)
+        plt.savefig(gp + '/plots/' + 'longpsd_ch' + contact + '.pdf')
+
 
 """
 def plot_spectrogram(md, msc, gp, i_int, padding, step_size, out_name):

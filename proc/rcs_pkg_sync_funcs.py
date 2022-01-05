@@ -15,6 +15,9 @@ import re
 from matplotlib import pyplot as plt
 pd.options.display.float_format = '{:.2f}'.format
 #pd.reset_option('display.float_format')
+import scipy.stats as stat
+import sklearn
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.utils import Bunch
 from sklearn.model_selection import train_test_split
 from sklearn import svm
@@ -22,9 +25,51 @@ from sklearn import metrics
 from sklearn.metrics import roc_auc_score, roc_curve, auc
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
+
 from regressors import stats
 import seaborn as sb
+
+def import_apple_file(apple_dir, keyword):
+    ['remor', 'yskinesia']
+    if (keyword == 0):
+        paths = glob.glob(apple_dir + '*remor*')
+    elif (keyword == 1):
+        paths = glob.glob(apple_dir + '*yskinesia*')
+        
+    gp = os.path.abspath(os.path.join(paths[0], "../..")) 
+    subj_id = os.path.basename(gp)
+    
+    md = pd.DataFrame(columns = ['timestamp'])
+
+    for i in range(0, len(paths)):
+        p = paths[i]
+        df = pd.read_csv(p)
+        df['timestamp'] = df['time'].astype(int)
+        if (p.find('yskinesia') != -1):
+            df['apple_dk'] = df['probability']
+
+        elif(p.find('remor') != -1):
+            df['apple_tremor'] = df['probability']
+
+        df = df.drop(['probability', 'time'], axis = 1)           
+        md = md.merge(df, how = 'outer')   
+
+    return md
+
+
+def import_apple_files(apple_dir):
+    md_tremor = import_apple_file(apple_dir, 0)  
+    md_dk = import_apple_file(apple_dir, 1) 
+    md_fp = '/Users/mariaolaru/Documents/temp/testing.csv'
+
+    md = md_tremor.merge(md_dk, how = 'outer', on = 'timestamp')                    
+    md = md.sort_values('timestamp')
+    md = md.reset_index(drop=True)
+    md.to_csv(md_fp, index = False, header=True)
+    md['timestamp'] = md['timestamp'].astype(int)
+    #md['timestamp'] = md['timestamp']*1000
+    return md
 
 def import_pkg_files(pkg_dir):
     paths = glob.glob(pkg_dir + 'scores*')
@@ -53,6 +98,15 @@ def import_pkg_files(pkg_dir):
 def normalize_data(x, min_x, max_x):
     x_norm = (x-min_x)/(max_x-min_x)
     return x_norm
+
+def preproc_apple(apple_dir):
+    apple_df = import_apple_files(apple_dir)
+    apple_df['timestamp'] = apple_df['timestamp'].astype(int)*1000
+    #pkg_df['timestamp'] = pkg_df['timestamp'] +  60000 #add 1min to end time
+    #pkg_df['timestamp'] = pkg_df['timestamp'] + 25200000 #add 7hr to end time (b/c Datetime in PT, not GMT)
+    start_time = apple_df['timestamp'].head(1).values[0]
+    stop_time = apple_df['timestamp'].tail(1).values[0]    
+    return [apple_df, start_time, stop_time]
 
 def remove_outliers(col):
     x = col.copy()
@@ -163,19 +217,34 @@ def preproc_coh(fp_coh, start_time, stop_time, sr):
     df_coh = df_coh.reset_index()
     return df_coh
 
-def merge_pkg_df(df_pkg, df_phs, df_psd, df_coh, df_meds, df_dys):
+def merge_pkg_df(df_pkg, df_apple, df_phs, df_psd, df_coh, df_meds, df_dys):
     #Both dfs must have 'timestamp' column to merge on
-    df_merged = pd.merge(df_pkg, df_phs, how = 'inner', on = 'timestamp')
-    df_merged = pd.merge(df_merged, df_coh, how = 'inner', on = 'timestamp')
-    df_merged = pd.merge(df_merged, df_psd, how = 'inner', on = 'timestamp')
-    df_merged = pd.merge(df_merged, df_meds, how = 'left', on = 'timestamp')
-    df_merged = pd.merge(df_merged, df_dys, how = 'outer', on = 'timestamp')
+    if (df_apple.empty == False):
+        df_merged = pd.merge(df_apple, df_psd, how = 'inner', on = 'timestamp')
+
+    elif (df_pkg.empty == False):
+        df_merged = pd.merge(df_pkg, df_psd, how = 'inner', on = 'timestamp')
+
+    if (df_phs.empty == False):
+        df_merged = pd.merge(df_merged, df_phs, how = 'inner', on = 'timestamp')
     
-    indx = np.where(np.isnan(df_merged['med_time']))[0]
-    df_merged.loc[indx, 'med_time'] = 0
+    if (df_coh.empty == False):
+        df_merged = pd.merge(df_merged, df_coh, how = 'inner', on = 'timestamp')
+
+
+    if (df_meds.empty == False):
+        df_merged = pd.merge(df_merged, df_meds, how = 'left', on = 'timestamp')
     
-    indx = np.where(np.isnan(df_merged['dyskinesia']))[0]
-    df_merged.loc[indx, 'dyskinesia'] = 0   
+    if (df_dys.empty == False):
+        df_merged = pd.merge(df_merged, df_dys, how = 'outer', on = 'timestamp')
+    
+    if (df_meds.empty == False):
+        indx = np.where(np.isnan(df_merged['med_time']))[0]
+        df_merged.loc[indx, 'med_time'] = 0
+    
+    if (df_dys.empty == False):
+        indx = np.where(np.isnan(df_merged['dyskinesia']))[0]
+        df_merged.loc[indx, 'dyskinesia'] = 0   
     
     df_merged = df_merged.sort_values('timestamp')
     df_merged = df_merged.reset_index(drop=True)
@@ -191,6 +260,7 @@ def find_nan_chunks(col, num_nans):
     indx_remove = x[x >= num_nans].index
     return indx_remove    
 
+"""
 def process_merged(df_merged):
     df_merged['BK_rev'] = df_merged['BK']*-1
     df_merged['BK_rev'] = df_merged['BK_rev'] + (df_merged['BK_rev'].min()*-1)
@@ -214,10 +284,48 @@ def process_merged(df_merged):
         df_merged[col_name] = normalize_data(df_merged[col_name], np.nanmin(df_merged[col_name]), np.nanmax(df_merged[col_name]))
 
     return df_merged
+"""
 
-def process_dfs(df_pkg, df_phs, df_psd, df_coh, df_meds, df_dys):
-    df_merged = merge_pkg_df(df_pkg, df_phs, df_psd, df_coh, df_meds, df_dys)
-    df_merged = process_merged(df_merged)
+def process_merged(df_merged, dt):
+
+    if (dt == 'PKG'):
+        df_merged['BK_rev'] = df_merged['BK']*-1
+        df_merged['BK_rev'] = df_merged['BK_rev'] + (df_merged['BK_rev'].min()*-1)
+        
+        #Remove outliers from each max_amp column separately
+        df_merged['DK'] = remove_outliers(df_merged['DK'])
+        df_merged['BK_rev'] = remove_outliers(df_merged['BK_rev'])
+        
+        #Normalize data from 0-1
+        df_merged['BK'] = normalize_data(df_merged['BK_rev'], 0, np.nanmax(df_merged['BK_rev']))
+        df_merged['DK'] = normalize_data(df_merged['DK'], 0, np.nanmax(df_merged['DK']))
+
+    if (dt == 'phs'):
+        df_merged['phs_beta'] = normalize_data(df_merged['max_amp_beta'], np.nanmin(df_merged['max_amp_beta']), np.nanmax(df_merged['max_amp_beta']))
+        df_merged['phs_gamma'] = normalize_data(df_merged['max_amp_gamma'], np.nanmin(df_merged['max_amp_gamma']), np.nanmax(df_merged['max_amp_gamma']))
+        #df_merged['max_amp_diff_norm'] = df_merged['max_amp_beta_norm'] - df_merged['max_amp_gamma_norm']
+        #df_merged['max_amp_diff_norm'] = normalize_data(df_merged['max_amp_diff'], 0, np.nanmax(df_merged['max_amp_diff']))
+
+    cols = np.array(df_merged.columns)
+    indices = [i for i, s in enumerate(list(cols)) if '+' in s]
+    for i in indices:
+        col_name = cols[i]
+        df_merged[col_name] = normalize_data(df_merged[col_name], np.nanmin(df_merged[col_name]), np.nanmax(df_merged[col_name]))
+
+    return df_merged
+
+def process_dfs(df_pkg, df_apple, df_phs, df_psd, df_coh, df_meds, df_dys):
+    df_merged = merge_pkg_df(df_pkg, df_apple, df_phs, df_psd, df_coh, df_meds, df_dys)
+
+    if (df_pkg.empty == False):
+        df_merged = process_merged(df_merged, 'PKG')
+        
+    if (df_apple.empty == False):
+        df_merged = process_merged(df_merged, 'apple')
+        
+    if (df_coh.empty == False):
+        df_merged = process_merged(df_merged, 'phs')
+        print('warning: need to combine PKG & phs scoring')
         
     return df_merged
 
@@ -261,7 +369,7 @@ def plot_pkg_sync(df_merged, freq_band, contacts):
     plt.savefig(out_dir + '/' + 'psd_' + 'freq' + str(freq_band) + '.pdf')
     plt.close()
  
-def plot_corrs(df_corr, PKG_measure):
+def plot_corrs(df_corr, PKG_measure, out_dir):
     plt.close()
     df_corr_s = df_corr.loc[PKG_measure, :]
     df_corr_s.freq_band = df_corr_s.freq_band.astype('float')
@@ -279,8 +387,7 @@ def plot_corrs(df_corr, PKG_measure):
     plt.ylabel('Pearson coef (r)')
     plt.xlabel('Frequency (Hz)')
     
-    out_dir = '/Users/mariaolaru/Documents/temp/RCS02/RCS02L_pkg_rcs/plots'
-    plt.savefig(out_dir + '/' + 'psd_corr_' + 'PKG_' + PKG_measure + '.pdf')
+    plt.savefig(out_dir + '/' + 'psd_corr_' + PKG_measure + '.pdf')
     #plt.close()    
     
 def get_med_times():
@@ -319,7 +426,7 @@ def find_dyskinesia(df_notes):
     df_dys['dyskinesia'] = 1
     return df_dys
 
-def compute_correlation(df_merged, keyword):
+def compute_correlation(df_merged, keyword, corr_vals):
 
     indices = [j for j, s in enumerate(list(df_merged.columns)) if keyword in s]    
     col_names = df_merged.columns[indices]   
@@ -338,7 +445,7 @@ def compute_correlation(df_merged, keyword):
             x = re.findall("([^']*)", col_names[i])[6]
             contacts = np.append(contacts, x)
         
-        col_names = np.append(col_names, ['BK', 'DK', 'phs_beta', 'phs_gamma'])
+        col_names = np.append(col_names, corr_vals)
     
         #get corr coefs
         df_vars = df_merged.loc[:, col_names]
@@ -352,7 +459,7 @@ def compute_correlation(df_merged, keyword):
         df_corr_ind = df_corr_ind.round(3)
         df_corr_ind['freq_band'] = freq
         df_corr = pd.concat([df_corr, df_corr_ind])
-    return df_corr
+    return [df_corr, contacts]
 
 def split(df_merged, feature_key, target_key):
     feature_i = [x for x, s in enumerate(list(df_merged.columns)) if feature_key in s]
@@ -532,9 +639,16 @@ def add_classes(col, class_thresh, labels):
         temp.loc[indx, 'class'] = labels[i]
     return temp['class'].values
     
-def run_lr(x_train, x_test, y_train, y_test):
-    linear_regressor = LinearRegression()
-    linear_regressor.fit(x_train, y_train) #perform linear regression
+def run_lr(lm_type, x_train, x_test, y_train, y_test):
+
+    if lm_type == 'base':
+        linear_regressor = sklearn.linear_model.LinearRegression()
+        linear_regressor.fit(x_train, y_train) #perform linear regression
+
+    elif lm_type == 'lasso':
+        linear_regressor = sklearn.linear_model.Lasso()
+        linear_regressor.fit(x_train, y_train) #perform linear regression
+        
     y_pred = linear_regressor.predict(x_test) #make predictions
 
     #print("Coefficients: \n", linear_regressor.coef_)
@@ -552,7 +666,7 @@ def col2mat(coefs, coef_pvals, feature_names):
     df_lm['coefs'] = coefs
     df_lm['coefs'] = pd.to_numeric(df_lm.coefs, errors = 'coerce')
     df_lm['coef_pvals'] = coef_pvals
-    df_lm.dropna(inplace=True)
+    #df_lm.dropna(inplace=True)
     
     contacts = get_contacts(feature_names)
 
@@ -573,51 +687,134 @@ def col2mat(coefs, coef_pvals, feature_names):
         df_lm_heat_p.iloc[i, :] = df_lm.loc[indices, 'coef_pvals'].values
         
         df_lm_heat_sig.iloc[i,:] = 0
-        indx = np.where(df_lm_heat.iloc[i,:] < 0.05)[0]
+        indx = np.where(df_lm_heat_p.iloc[i,:] < 0.05)[0]
         df_lm_heat_sig.iloc[i,indx] = df_lm_heat.iloc[i,:][indx]
 
-    return [df_lm_heat, df_lm_heat_p, df_lm_heat_sig]
+    return [df_lm_heat_sig, contacts]
 
-def plot_heatmap(heatmap, row_labels, title):
+def plot_heatmap(heatmap, freqs, contacts, title):
+    max_val = max(abs(heatmap).max(axis=1))
+
     plt.close()
-    fig, ax = plt.subplots(figsize=(13, 5))
-    sb.heatmap((heatmap*1000).astype(int), cmap = 'PiYG', vmin=-400, vmax=400)
+    fig, ax = plt.subplots(figsize=(40, 6))
+    sb.heatmap((heatmap.astype(float)), cmap = 'PiYG', vmin = max_val *-1, vmax = max_val)
     #img = ax.imshow(df_lm_heat, cmap='copper', interpolation='nearest', origin = 'lower')
     
-    #ax.set_xticks(np.arange(0, len(freqs),1))
-    ##ax.set_yticks(np.arange(0, len(contacts),1))
-    #ax.set_xticklabels(str(freqs), rotation = -45)
-    ax.set_yticklabels(row_labels)
+    ax.set_yticks(np.arange(0, len(contacts),1)+0.5)
+    ax.set_yticklabels(contacts, rotation = 90)
+
+    ax.set_xticks(np.arange(0, len(freqs),5) + 0.5) 
+    ax.set_xticklabels(np.arange(0, len(freqs),5), rotation = 45) 
+ 
     ax.set_title(title)
     ax.set(xlabel = 'frequency band (Hz)')
     ax.set(ylabel = 'channel')
     plt.show()
 
-def run_lm_wrapper(df, feature_key, target_key, heatmap):
+def run_lm_wrapper(df, feature_key, target_key, lm_type, heatmap):
     [feature_i, target_i] = split(df, feature_key, target_key)
     [x_train, x_test, x_names, y_train, y_test] = shuffle(df, feature_i, target_i)
 
     #run linear regression
-    [coefs, coef_pvals, y_pred] = run_lr(x_train, x_test, y_train, y_test)
+    [coefs, coef_pvals, y_pred] = run_lr(lm_type, x_train, x_test, y_train, y_test)
     df_coefs = pd.DataFrame([])
     df_coefs['coefs'] = coefs
     df_coefs['pvals'] = coef_pvals
     df_coefs['features'] = x_names
     
+    [df_lm_heat_sig, contacts] = col2mat(df_coefs['coefs'], df_coefs['pvals'], df_coefs['features'])
+    
+    if heatmap == 2:
+        freqs = np.linspace(0, 125, 126).astype(int)
+        plot_heatmap(df_lm_heat_sig, freqs, contacts, 'linear regression: significant coefficients')
+
+    return df_coefs
+
+"""     
     feature_names = df.columns[feature_i]
     [df_lm_heat, df_lm_heat_p, df_lm_heat_sig] = col2mat(coefs, coef_pvals, feature_names)
     
     row_labels = get_contacts(feature_names)
-    
+   
     if (heatmap == 0):
         plot_heatmap(df_lm_heat, row_labels, "all beta values")
     if (heatmap == 1):
         plot_heatmap(df_lm_heat_p, row_labels, "all p-values")
     if (heatmap == 2):
         plot_heatmap(df_lm_heat_sig, row_labels, "all significant beta values")
+"""
 
-    return df_coefs
+    
+def run_pca(df, key, ncomponents, option):
+    """
+    Parameters
+    ----------
+    df : input merged dataframe
+    key : partial mature from df column headers for feature input
+    ncomponents : number of components in PCA analysis
+    option: 0 = run PCA with current formatting, 1 = transform data for PCA
         
+    Returns
+    -------
+    None.
+
+    """
+    
+    df_temp = df.copy()
+    df_temp = df.dropna().reset_index(drop=True)
+    
+    #get all features
+    feature_col_indxs = [x for x, s in enumerate(list(df_temp.columns)) if key in s]
+
+    df_preproc = df_temp.iloc[:, feature_col_indxs]
+    
+    if option == 1:
+        df_preproc = df_preproc.T
+
+    x = df_preproc.to_numpy()
+    x_colnames = df_temp.columns[feature_col_indxs]
+
+    pca = PCA(n_components=ncomponents)
+    pcs = pca.fit_transform(x)    
+
+    df_pcs = pd.DataFrame(data = pcs)
+    df_pcs = df_pcs.add_prefix('PC')
+        
+    var_ratio = pca.explained_variance_ratio_
+    return [df_pcs, var_ratio] 
+
+def run_pca_wrapper(df, keys, ncomponents, option, out_dir):
+    df_pcs = pd.DataFrame([])
+    for i in range(len(keys)):
+        [df_pc, test_vr] = run_pca(df, keys[i], ncomponents, option)
+        df_pc = df_pc.add_suffix('_' + keys[i])
+        df_pcs = pd.concat([df_pcs, df_pc], axis = 1)
+        plot_pcs(df_pc.iloc[:, 0:ncomponents], keys[i], out_dir)
+    return df_pcs
+
+def plot_pcs(df_pcs, key, out_parent_dir):
+    plt.close()
+    nlen = df_pcs.shape[0]    
+    npcs = df_pcs.shape[1]
+    
+    for i in range(npcs):
+        label = 'PC' + str(i+1)
+        plt.plot(np.linspace(0, nlen-1, nlen), df_pcs.iloc[:, i], label = label)
+    if nlen < 1002:
+        opt = 'freq'
+        plt.xlabel('Frequency (Hz)')
+    else:
+        opt = 'td'
+        plt.xlabel('Time (samples)')
+    plt.ylabel('eigenvalues')
+    plt.title(key)
+    plt.legend()
+    
+    out_dir = out_parent_dir + 'plots'
+    plt.savefig(out_dir + '/' + 'pca_' + opt + '_' + key + '.pdf')
+    plt.savefig(out_dir + '/' + 'pca_' + opt + '_' + key + '.svg')
+
+    
 def run_svm_wrapper(df, feature_key, target_key, thresh):
     [feature_i, target_i] = split(df, feature_key, target_key)
     [x_train, x_test, x_names, y_train, y_test] = shuffle(df, feature_i, target_i)
@@ -646,5 +843,38 @@ def get_top_features(coefs, x_names):
     df_top_neg = df_coefs_imp.iloc[0:10, :]
     return [df_top_pos, df_top_neg]
     
+def add_classes_wrapper(df, min_thresh):
+    df_lda = df.copy()
+    df_lda = df_lda[df_lda['DK'] > min_thresh].reset_index(drop=True)
+    df_lda['DK_log'] = np.log10(df_lda['DK'])
+    df_lda['DK_log'] = df_lda['DK_log'] - df_lda['DK_log'].min()
+    class_thresh = np.nanpercentile(df_lda['DK_log'], [20, 40, 60, 80, 100])
+    labels = [1, 2, 3, 4, 5]
+    df_lda['DK_class'] = add_classes(df_lda['DK_log'], class_thresh, labels)
     
+    indx = df_lda[df_lda['DK_class'] == 0].index
+    df_lda['DK_class'][indx] = 1
+
+    return [df_lda, class_thresh]
+       
+def plot_classes(col, label, class_thresh):
+    plt.close()
+    plt.plot(col)
+    
+    for i in range(len(class_thresh)):
+        plt.hlines(class_thresh[i], 0, len(col), alpha = 1, color = 'red')
+    plt.ylabel(label)
+    plt.xlabel('time (samples)')
+    
+def run_lda(df, feature_key, target):
+    feature_i = [x for x, s in enumerate(list(df.columns)) if feature_key in s]
+    X = df.iloc[:, feature_i].to_numpy() #assumes 10 PCs
+    y = df.loc[:, target].to_numpy()
+    #y_bi = df_temp.loc[:, 'DK_class_binary'].to_numpy()    
+
+    out = sklearn.model_selection.cross_val_score(LinearDiscriminantAnalysis(), X, y, cv = 10)
+    avg_acc = np.mean(out)
+    sem = stat.sem(out)
+    return [avg_acc, sem]
+
     

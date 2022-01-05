@@ -713,11 +713,34 @@ def compute_burstdur(mdsm, burst_dur, fs):
     return df_bsr
 """
 
+def rm_stim(msc, df, label):
+    """
+    Downsample entire dataframe to out_sr
+    """
+    ts_ranges = find_ts_ranges(msc, df, label)
+    if ts_ranges.size == 0:
+        return df
+    df_rm = df.copy()
+    msc_rm = msc.copy()
+    for i in range(len(ts_ranges)):
+        print("Removing stim chunk: " + str(i) + "/" + str(len(ts_ranges)))
+        dfc = df_rm[(df_rm.loc[:, 'timestamp'] >= ts_ranges['timestamp_start'][i]) & (df_rm.loc[:, 'timestamp'] <= ts_ranges['timestamp_stop'][i])]
+        msc_indx = np.where((msc.loc[:, 'timestamp_unix'] >= ts_ranges['timestamp_start'][i]) & (msc.loc[:, 'timestamp_unix'] <= ts_ranges['timestamp_stop'][i]))[0][0]
+        msc_rm.loc[msc_indx, 'stim_status'] = 0
+        if (dfc.size) == 0:
+            continue        
+        df_rm = df_rm.drop(dfc.index, axis = 0)
+        msc_rm.loc[msc_indx, 'stim_status'] = 0
+    df_rm = df_rm.reset_index(drop=True)
+        
+    return [msc_rm, df_rm]
+
+
 def downsample_data(msc, df, out_sr):
     """
     Downsample entire dataframe to out_sr
     """
-    ts_ranges = find_fs_ranges(msc, df, out_sr)
+    ts_ranges = find_ts_ranges(msc, df, out_sr)
     if ts_ranges.size == 0:
         return df
     df_ds = df.copy()
@@ -726,6 +749,8 @@ def downsample_data(msc, df, out_sr):
         print("Downsampling chunk: " + str(i) + "/" + str(len(ts_ranges)))
         dfc = df_ds[(df_ds.loc[:, 'timestamp'] >= ts_ranges['timestamp_start'][i]) & (df_ds.loc[:, 'timestamp'] <= ts_ranges['timestamp_stop'][i])]
         if (dfc.size) == 0:
+            msc_indx = np.where((msc.loc[:, 'timestamp_unix'] >= ts_ranges['timestamp_start'][i]) & (msc.loc[:, 'timestamp_unix'] <= ts_ranges['timestamp_stop'][i]))[0][0]
+            msc_ds.loc[msc_indx, 'sr'] = out_sr 
             continue        
         msc_indx = np.where((msc.loc[:, 'timestamp_unix'] >= ts_ranges['timestamp_start'][i]) & (msc.loc[:, 'timestamp_unix'] <= ts_ranges['timestamp_stop'][i]))[0][0]
         in_sr = msc.loc[msc_indx,'sr']      
@@ -733,6 +758,7 @@ def downsample_data(msc, df, out_sr):
         df_ds.iloc[dfp.index, :] = dfp
         msc_ds.loc[msc_indx, 'sr'] = out_sr  
     df_ds = df_ds[df_ds.iloc[:,1].notna()]
+    df_ds = df_ds.reset_index(drop=True)
         
     return [msc_ds, df_ds]
 
@@ -764,13 +790,19 @@ def downsample_ch(voltage, in_sr, out_sr):
     Y = np.concatenate([ds_signal, remaining_signal]) 
     return Y
 
-def find_fs_ranges(msc, md, fs):
+def find_ts_ranges(msc, md, dt):
     """
     Find timestamp ranges that do not contain the desired/input fs
     """
     md_ts_tail = md['timestamp'].tail(1).values[0]
 
-    indx = np.where(msc['sr'] > fs)[0]
+    if type(dt) == int:
+        indx = np.where(msc['sr'] > dt)[0]
+    elif type(dt) == str:
+        if dt == 'stimON':
+            indx = np.where(msc['stim_status'] == 1)[0]
+        elif dt == 'stimOFF':
+            indx = np.where(msc['stim_status'] == 0)[0]
     if indx.size == 0:
         print('Warning – no samples to downsample in this dataset')
         ts_range = pd.DataFrame()
@@ -892,3 +924,8 @@ def get_entrainment_score(df_phs):
     df_entrain.loc[indx_noentrain, 'max_amp'] = 0
     return df_entrain
 
+
+
+#plt.plot(np.linspace(0, 2358242, 2358243), md_ds['+1-0'][0:2358243], label = "sr=250")
+#plt.plot(np.linspace(0, 2358242, 2358243*2), md['+1-0'][0:2358243*2], label = "sr=500")
+#plt.legend()

@@ -10,59 +10,93 @@ Individual freq correlations
 
 import proc.rcs_pkg_sync_funcs as sync
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
-    
-pkg_dir = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pkg_data/'
-fp_phs = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_phs.csv'
-fp_psd = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_psd.csv'
+
+subj_ID = 'RCS12'
+#subj_ID = 'GRCS02'
+#subj_ID = 'GRCS01'
+subj_side = 'R'
+montage_num = 'PKG'
+
+subj_dir = '/Users/mariaolaru/Documents/temp/' + subj_ID + '/' + subj_ID + subj_side
+#GRCS01R_pre-stim/3day_sprint/montage_1
+pkg_dir = subj_dir + '/' + subj_ID + subj_side + '_pkg_data/'
+apple_dir = subj_dir + '/' + subj_ID + subj_side + '_apple_data/'
+#fp_phs = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_phs.csv'
+
+#fp_psd = subj_dir + '/' + subj_ID + subj_side + '_pre-stim' + '/' + '3day_sprint/montage' + '/' + 'montage_psd_total.csv'
+fp_psd = subj_dir + '/' + subj_ID + subj_side + '_pre-stim' + '/' + '3day_sprint/montage_' + str(montage_num) + '/' + 'montage_' + str(montage_num) + '_psd_total.csv'
 #fp_psd = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_psd_aperiodic.csv'
 #fp_psd = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_psd_periodic.csv'
-fp_coh = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_coh.csv'
-fp_notes = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_meta_session_notes.csv'
+#fp_coh = '/Users/mariaolaru/Documents/temp/' 'RCS07/RCS07L/RCS07L_pre-stim/RCS07L' '_pre-stim_coh.csv'
+#fp_notes = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pre-stim/RCS07L_pre-stim_meta_session_notes.csv'
+
+#sr = 500
 sr = 250
 
+#[df_apple, start_time, stop_time] = sync.preproc_apple(apple_dir)
+df_apple = pd.DataFrame([])
+
 [df_pkg, start_time, stop_time] = sync.preproc_pkg(pkg_dir)
-df_phs = sync.preproc_phs(fp_phs, start_time, stop_time)
+#df_pkg = pd.DataFrame([])
+
+#df_phs = sync.preproc_phs(fp_phs, start_time, stop_time)
+df_phs = pd.DataFrame([])
 
 df_psd = sync.preproc_psd(fp_psd, start_time, stop_time)
 
-df_coh = sync.preproc_coh(fp_coh, start_time, stop_time, sr)
-df_notes = sync.preproc_notes(fp_notes, start_time, stop_time)
-df_dys = sync.find_dyskinesia(df_notes)
-df_meds = sync.get_med_times()
+#df_coh = sync.preproc_coh(fp_coh, start_time, stop_time, sr)
+df_coh = pd.DataFrame([])
+
+#df_notes = sync.preproc_notes(fp_notes, start_time, stop_time)
+#df_dys = sync.find_dyskinesia(df_notes)
+#df_meds = sync.get_med_times()
+df_notes = pd.DataFrame([])
+df_dys = pd.DataFrame([])
+df_meds = pd.DataFrame([])
 
 #Processing
-df_merged = sync.process_dfs(df_pkg, df_phs, df_psd, df_coh, df_meds, df_dys)
-df_merged = sync.add_sleep_col(df_merged)
+df_merged = sync.process_dfs(df_pkg, df_apple, df_phs, df_psd, df_coh, df_meds, df_dys)
+
+#hardcoded sleep times of 10PM to 8AM
+if (df_notes.empty == False):
+    df_merged = sync.add_sleep_col(df_merged)
 
 
 #remove BK scores reflecting periods of inactivity
-df_merged_rmrest = df_merged[df_merged['inactive'] == 0]
+if (df_pkg.empty == False):
+    df_merged_rmrest = df_merged[df_merged['inactive'] == 0]
 
 #correlate all scores
 keyword = 'spectra'
 #keyword = 'fooof_flat'
 #keyword = 'fooof_peak_rm'
-df_spectra_corr = sync.compute_correlation(df_merged, keyword)
-out_fp = '/Users/mariaolaru/Documents/temp/RCS07/RCS07L/RCS07L_pkg_rcs' + '/RCS07_corrs' + '.csv'
+
+corr_vals = ['DK', 'BK']
+#corr_vals = ['apple_dk', 'apple_tremor']
+
+[df_spectra_corr, contacts] = sync.compute_correlation(df_merged, keyword, corr_vals)
+out_fp = '/Users/mariaolaru/Documents/temp/' + subj_ID + '/' + subj_ID + subj_side + '/' + subj_ID + subj_side + '_3day_sprint' + '/' + subj_ID + subj_side + '_corrs' + '.csv'
 df_spectra_corr.to_csv(out_fp)
 
 #plot correlations for each frequency
-sync.plot_corrs(df_spectra_corr, 'DK')
-sync.plot_corrs(df_spectra_corr, 'BK')
+out_dir = '/Users/mariaolaru/Documents/temp/' + subj_ID + '/' + subj_ID + subj_side + '/' + subj_ID + subj_side + '_3day_sprint/plots/'
+sync.plot_corrs(df_spectra_corr, corr_vals[0], out_dir)
+sync.plot_corrs(df_spectra_corr, corr_vals[1], out_dir)
 
 #correlate coherence
-df_coh_corr = sync.compute_correlation(df_merged, 'Cxy')
-sync.plot_corrs(df_coh_corr, 'DK')
-sync.plot_corrs(df_coh_corr, 'BK')
+#df_coh_corr = sync.compute_correlation(df_merged, 'Cxy')
+#sync.plot_corrs(df_coh_corr, 'DK')
+#sync.plot_corrs(df_coh_corr, 'BK')
 
 ####### Plotting timeseries data ####################
 df = df_merged
-freq = 13
+freq = 73
 plt.close()
-contacts = np.array(['+2-0', '+3-1', '+10-8', '+11-9'])
+#contacts = np.array(['+2-0', '+3-1', '+10-8', '+11-9'])
 breaks = sync.find_noncontinuous_seg(df_merged['timestamp'])
-title = "RCS07 PKG-RCS pre-stim time-series sync"
+title =  subj_ID + subj_side + ' wearable-RCS pre-stim time-series sync'
 #title = ("freq_band: " + str(freq_band) + "Hz")
 plt.title(title)
 plt.rcParams["figure.figsize"] = (30,3.5)
@@ -70,15 +104,15 @@ plt.rcParams["figure.figsize"] = (30,3.5)
 #plt.plot(np.arange(1, len(df)+1, 1), df['phs_gamma'], alpha = 0.7, label = 'phs-gamma', markersize = 1, color = 'slategray')
 #plt.plot(np.arange(1, len(df)+1, 1), df['phs_beta'], alpha = 0.7, label = 'phs-beta', markersize = 1, color = 'olivedrab')
 
-plt.plot(np.arange(1, len(df)+1, 1), df['DK'], alpha = 0.9, label = 'PKG-DK', markersize = 1, color = 'steelblue')
-#plt.plot(np.arange(1, len(df)+1, 1), df['BK'], alpha = 0.7, label = 'PKG-BK', markersize = 1, color = 'indianred')
+plt.plot(np.arange(1, len(df)+1, 1), df[corr_vals[0]], alpha = 0.9, label = corr_vals[0], markersize = 1, color = 'steelblue')
+#plt.plot(np.arange(1, len(df)+1, 1), df[corr_vals[1]], alpha = 0.7, label = corr_vals[1], markersize = 1, color = 'indianred')
 
-#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[0] + "')"], alpha = 0.7, label = str(freq)+ "Hz " + contacts[0], markersize = 1, color = 'orchid')
-#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[1] + "')"], alpha = 0.9, label = str(freq)+ "Hz " + contacts[1], markersize = 1, color = 'mediumpurple')
+#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[0] + "')"], alpha = 0.7, label = str(freq)+ "Hz " + contacts[0], markersize = 1, color = 'darkkhaki')
+#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[1] + "')"], alpha = 0.9, label = str(freq)+ "Hz " + contacts[1], markersize = 1, color = 'darkorange')
 
 #freq = 13
-#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[2] + "')"], alpha = 0.7, label = str(freq)+ "Hz " + contacts[2], markersize = 1, color = 'darkkhaki')
-#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[3] + "')"], alpha = 0.7, label = str(freq)+ "Hz " + contacts[3], markersize = 1, color = 'darkorange')
+plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[2] + "')"], alpha = 0.7, label = str(freq)+ "Hz " + contacts[2], markersize = 1, color = 'orchid')
+#plt.plot(np.arange(1, len(df)+1, 1), df["('" + keyword + "'," + str(freq) + ".0,'" + contacts[3] + "')"], alpha = 0.7, label = str(freq)+ "Hz " + contacts[3], markersize = 1, color = 'mediumpurple')
 
 #plt.vlines(df_merged[df['dyskinesia'] == 1].index, 0, 1, color = 'black', label = 'dyskinesia')
 #plt.vlines(df_merged[df['med_time'] == 1].index, 0, 1, color = 'green', label = 'meds taken')
@@ -90,7 +124,6 @@ plt.plot(np.arange(1, len(df)+1, 1), df['DK'], alpha = 0.9, label = 'PKG-DK', ma
 #plt.hlines(class_thresh[2], 0, len(df), alpha = 0.7, label = 'LDA thresh', color = 'red')
 #plt.hlines(class_thresh[3], len(df), alpha = 0.7, label = 'LDA thresh', color = 'red')
 #plt.hlines(class_thresh[4], 0, len(df), alpha = 0.7, label = 'LDA thresh', color = 'red')
-
 
 plt.legend(ncol = 6, loc = 'upper right')
 plt.ylabel('scores (normalized)')
@@ -139,48 +172,16 @@ import pandas as pd
 df_top_coefs = pd.concat([df_top_pos, df_top_neg])
 """
 ## split DK data in 5 equal dyskinesia classes above SVM threshold for dyskinesia
-df_lda = df_svm.copy()
-df_lda = df_lda[df_lda['DK'] > 0.03].reset_index(drop=True)
-df_lda['DK_log'] = np.log10(df_lda['DK'])
-df_lda['DK_log'] = df_lda['DK_log'] - df_lda['DK_log'].min()
-class_thresh = np.nanpercentile(df_lda['DK_log'], [20, 40, 60, 80, 100])
-labels = [1, 2, 3, 4, 5]
-df_lda['DK_class'] = sync.add_classes(df_lda['DK_log'], class_thresh, labels)
+df = df_merged_spectra_2ch
+min_thresh = 0.03
+[df_lda, class_thresh] = sync.add_classes_wrapper(df, min_thresh)
 
-indx = df_lda[df_lda['DK_class'] == 0].index
-df_lda['DK_class'][indx] = 1
+label = 'log(normalized DK scores)'
+sync.plot_classes(df_lda['DK_log'], label, class_thresh)
+[accuracy, sem] = sync.run_lda(df, 'spectra', 'DK_class')
 
-plt.plot(df_lda['DK_log'])
-plt.hlines(class_thresh[0], 0, len(df_lda), alpha = 1, label = '20th percentile', color = 'red')
-plt.hlines(class_thresh[1], 0, len(df_lda), alpha = 1, label = '40th percentile', color = 'red')
-plt.hlines(class_thresh[2], 0, len(df_lda), alpha = 1, label = '60th percentile', color = 'red')
-plt.hlines(class_thresh[3], 0, len(df_lda), alpha = 1, label = '80th percentile', color = 'red')
-plt.hlines(class_thresh[4], 0, len(df_lda), alpha = 1, label = '100th percentile', color = 'red')
-plt.ylabel('log(normalized DK scores)')
-plt.xlabel('time (samples)')
-plt.legend()
-
-#indx = df_merged[df_merged['DK'] > 0.03].index
-#df_merged.loc[indx, 'DK_class_binary'] = 1
-
-"""
-#create LDA df using feature selection
-features = df_top_coefs['features']
-df_temp = df_merged.copy()
-df_temp = df_temp.dropna().reset_index(drop=True)
-"""
-X = df_lda.iloc[:, range(10)].to_numpy() #assumes 10 PCs
-y = df_lda.loc[:, 'DK_class'].to_numpy()
-#y_bi = df_temp.loc[:, 'DK_class_binary'].to_numpy()
-
-import sklearn
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-out = sklearn.model_selection.cross_val_score(LinearDiscriminantAnalysis(), X, y, cv = 10)
-np.mean(out)
-import scipy.stats as stat
-stat.sem(out)
-#sync.run_LDA(df_merged) 
-
+#run LR with PCA feature selection
+sync.run_lm_wrapper(df_svm, 'PC', 'DK', 2) #all spectra channels
 
 #run SVM
 sync.run_svm_wrapper(df_merged, 'spectra', 'DK', 0.03)
@@ -195,7 +196,9 @@ sync.run_svm_wrapper(df_merged_combo, 'Cxy', 'DK', 0.03)
 sync.run_svm_wrapper(df_merged_combo, '+3-1_+10-8', 'DK', 0.03)
 
 #run linear regressions
-sync.run_lm_wrapper(df_merged, 'spectra', 'DK', 2) #all spectra channels
+df_coefs = sync.run_lm_wrapper(df_merged, 'spectra', 'DK', 'base', 2) #all spectra channels
+df_coefs = sync.run_lm_wrapper(df_merged, 'spectra', 'DK', 'lasso', 2) #all spectra channels
+
 sync.run_lm_wrapper(df_merged, 'Cxy', 'DK', 2) #all coherence combos
 sync.run_lm_wrapper(df_merged_combo, '+', 'DK', 2) #2 spectra, 2 coh channels
 sync.run_lm_wrapper(df_merged_combo, 'spectra', 'DK', 2) #2 spectra channels

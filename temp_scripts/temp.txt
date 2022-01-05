@@ -1,0 +1,289 @@
+130.0
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
+
+FOOOF WARNING: Lower-bound peak width limit is < or ~= the frequency resolution: 1.00 <= 0.50
+	Lower bounds below frequency-resolution have no effect (effective lower bound is the frequency resolution).
+	Too low a limit may lead to overfitting noise as small bandwidth peaks.
+	We recommend a lower bound of approximately 2x the frequency resolution.
+
