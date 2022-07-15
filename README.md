@@ -21,9 +21,9 @@ All CSV inputs are first preprocessed using ```preproc.preprocess_settings(sessi
 
 Here's an example of the Session parent directory:
 ```
-(base) ➜  RCS07L_montage git:(master) ✗ pwd
-~/Documents/RCS07/RCS07L/RCS07L_montage
-(base) ➜  RCS07L_montage git:(master) ✗ ls
+(base) ➜  RCS02L_montage git:(master) ✗ pwd
+~/Documents/RCS02/RCS02L/RCS02L_montage
+(base) ➜  RCS02L_montage git:(master) ✗ ls
 Session1570875824700
 Session1570924382813
 Session1570925029056
@@ -32,7 +32,7 @@ Session1570937044332
 Now here's how you can process and format the Sessions of the Session parent directory:
 ```python3
 import preproc.preprocess_funcs as preproc
-session_parent_path = '~/Documents/RCS07/RCS07L/RCS07L_montage/'
+session_parent_path = '~/Documents/RCS02/RCS02L/RCS02L_montage/'
 [settings, notes, grandparent_path] = preproc.preprocess_settings(session_parent_path)
 neural_data = preproc.preprocess_data(session_parent_path, settings, grandparent_path) 
 ```
@@ -49,20 +49,14 @@ All outputs will be generated in a `plots` directory of the input directory
 
 ### Creating overlaid power spectra
 ```python3
-from preproc.preprocess_funcs import preproc
-from proc.process_funcs import proc
 
-dir_name = '/Users/mariaolaru/Documents/temp/RCS02/RCS02L/RCS02L_pre-stim/'
-
-[msc, df_notes, gp] = preproc.preprocess_settings(dir_name)
-md = preproc.preprocess_data(dir_name, msc, gp) #separate fn b/c can take much longer time to process data
-subj_id = msc['subj_id'][0] + " " + msc['implant_side'][0]
+subj_id = settings['subj_id'][0] + " " + settings['implant_side'][0]
 
 sr = 250
-[msc_ds, md_ds] = proc.downsample_data(msc, md, sr) #downsamples separately for each msc label of sr
+[settings_downsampled, neural_data_downsampled] = proc.downsample_data(settings, neural_data, sr) #downsamples separately for each msc label of sr
 
-contacts = [msc['ch0_sense_contacts'].unique()[0], msc['ch1_sense_contacts'].unique()[0], msc['ch2_sense_contacts'].unique()[0], msc['ch3_sense_contacts'].unique()[0]]
-df_psd = proc.convert_psd_long_old(md_ds, gp, contacts, 120, 119, sr)
+contacts = [settings['ch0_sense_contacts'].unique()[0], settings['ch1_sense_contacts'].unique()[0], settings['ch2_sense_contacts'].unique()[0], settings['ch3_sense_contacts'].unique()[0]]
+overlaid_psds = proc.convert_psd_long_old(neural_data_downsampled, grandparent_path, contacts, 120, 119, sr) #create 2 minute intervals with 1 minute overlap
 ```
 
 ## License
