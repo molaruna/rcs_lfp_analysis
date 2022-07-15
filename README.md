@@ -47,6 +47,26 @@ Note: ```labels``` is a vector that lists the various conditions of each Session
 <br/>
 All outputs will be generated in a `plots` directory of the input directory
 
+### Creating overlaid power spectra
+```python3
+from preproc.preprocess_funcs import preproc
+from plts.plot_funcs import plot
+from proc.process_funcs import proc
+from fooof import FOOOF
+
+dir_name = '/Users/mariaolaru/Documents/temp/RCS02/RCS02L/RCS02L_pre-stim/'
+
+[msc, df_notes, gp] = preproc.preprocess_settings(dir_name)
+md = preproc.preprocess_data(dir_name, msc, gp) #separate fn b/c can take much longer time to process data
+subj_id = msc['subj_id'][0] + " " + msc['implant_side'][0]
+
+sr = 250
+[msc_ds, md_ds] = proc.downsample_data(msc, md, sr) #downsamples separately for each msc label of sr
+
+contacts = [msc['ch0_sense_contacts'].unique()[0], msc['ch1_sense_contacts'].unique()[0], msc['ch2_sense_contacts'].unique()[0], msc['ch3_sense_contacts'].unique()[0]]
+df_psd = proc.convert_psd_long_old(md_ds, gp, contacts, 120, 119, sr)
+```
+
 ## License
 This software is open source and under an MIT license.
 
