@@ -52,11 +52,10 @@ All outputs will be generated in a `plots` directory of the input directory
 
 subj_id = settings['subj_id'][0] + " " + settings['implant_side'][0]
 
-sr = 250
-[settings_downsampled, neural_data_downsampled] = proc.downsample_data(settings, neural_data, sr)
-
 contacts = [settings['ch0_sense_contacts'].unique()[0], settings['ch1_sense_contacts'].unique()[0], settings['ch2_sense_contacts'].unique()[0], settings['ch3_sense_contacts'].unique()[0]]
-overlaid_psds = proc.convert_psd_long_old(neural_data_downsampled, grandparent_path, contacts, 120, 119, sr) #create 2 minute intervals with 1 minute overlap
+
+sr = 250 #this information can be found in the settings table, but good to sanity check manually first
+overlaid_psds = proc.convert_psd_long_old(neural_data, grandparent_path, contacts, 120, 119, sr) #create 2 minute intervals with 1 minute overlap
 ```
 
 ## License
