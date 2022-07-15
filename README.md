@@ -16,7 +16,7 @@ Data are collected from the Summit RC+S neurostimulator (Medtronic) and availabl
 
 Unless otherwise specified, CSV file header information matches the respective MAT file header information. 
 
-## Analysis
+## Preprocessing workflow
 All CSV inputs are first preprocessed using ```preproc.preprocess_settings(session_parent_dir)```.
 
 Here's an example of the Session parent directory:
