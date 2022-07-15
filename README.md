@@ -50,9 +50,7 @@ All outputs will be generated in a `plots` directory of the input directory
 ### Creating overlaid power spectra
 ```python3
 from preproc.preprocess_funcs import preproc
-from plts.plot_funcs import plot
 from proc.process_funcs import proc
-from fooof import FOOOF
 
 dir_name = '/Users/mariaolaru/Documents/temp/RCS02/RCS02L/RCS02L_pre-stim/'
 
